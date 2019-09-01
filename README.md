@@ -1,19 +1,4 @@
-# Cannot return null for non-nullable field Mutation.createMovieComment.
-
-not defined
-
-# TypeError: Cannot read property 'getBooks' of undefined
-
-graphql
-[String]
-
-# POST http://localhost:5000/ 400 (Bad Request)
-
-# Hook 不刷新
-
-返回的内容不够
-
-# Social App - MERNG Stack
+# Awesome Douban Social App - MERNG Stack
 
 MERNG stands for MongoDB, Express, React, Node.js & GraphQL. This is a simple social app which user may comment or like on other users post.
 [Demo Site](https://mysterious-thicket-27635.herokuapp.com/)
