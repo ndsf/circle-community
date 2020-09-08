@@ -139,13 +139,16 @@ module.exports = {
           group.username === username
         ) {
           const names = usernames.split(' ');
-          for (const name in names) {
-            if (!group.likes.find(like => like.username === username)) {
+          for (const name of names) {
+            if (!group.likes.find(like => like.username === name)) {
               // Not liked, like group
-              group.likes.push({
-                username,
-                createdAt: new Date().toISOString()
-              });
+              // check if user exists
+              const importedUser = await User.findOne({username: name});
+              if (importedUser)
+                group.likes.push({
+                  username: name,
+                  createdAt: new Date().toISOString()
+                });
             }
           }
           await group.save();

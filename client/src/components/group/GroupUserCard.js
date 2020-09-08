@@ -11,6 +11,7 @@ const GroupUserCard = ({ group: { id, body, username, admins, likes } }) => {
     user &&
     (admins.find(admin => admin.username === user.username) ||
       username === user.username);
+  const liked = user && likes.find(like => like.username === user.username);
 
   return (
     <Card
@@ -19,7 +20,7 @@ const GroupUserCard = ({ group: { id, body, username, admins, likes } }) => {
       title="成员"
       extra={
         <Link to={`/groups/${id}/applies`}>
-          {isAdmin ? "批量导入" : "申请加入"}
+          {isAdmin ? "批量导入" : (liked ? "" : "申请加入")}
         </Link>
       }
       style={{ marginBottom: "24px" }}
