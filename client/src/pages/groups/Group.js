@@ -25,6 +25,7 @@ import GroupLikePostButton from "../../components/group/GroupLikePostButton";
 import GroupReportPostButton from "../../components/group/GroupReportPostButton";
 import GroupInformationCard from "../../components/group/GroupInformationCard";
 import GroupAdminCard from "../../components/group/GroupAdminCard";
+import GroupUserCard from "../../components/group/GroupUserCard";
 const { TextArea } = Input;
 const { Content, Footer } = Layout;
 
@@ -239,6 +240,7 @@ const Group = props => {
                   deleteGroupCallback={deleteGroupCallback}
                 />
                 <GroupAdminCard group={getGroup} />
+                <GroupUserCard group={getGroup} />
               </Col>
             </Row>
           </div>

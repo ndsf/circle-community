@@ -2,10 +2,9 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Card, Avatar, List } from "antd";
 import moment from "moment";
-import GroupDeleteAdminButton from "./GroupDeleteAdminButton";
 import { AuthContext } from "../../context/auth";
 
-const GroupAdminCard = ({ group: { id, body, username, admins } }) => {
+const GroupUserCard = ({ group: { id, body, username, admins, likes } }) => {
   const { user } = useContext(AuthContext);
 
   const isAdmin =
@@ -17,10 +16,10 @@ const GroupAdminCard = ({ group: { id, body, username, admins } }) => {
     <Card
       bodyStyle={{ paddingTop: 12, paddingBottom: 12 }}
       bordered={false}
-      title="管理员"
+      title="成员"
       extra={
         <Link to={`/groups/${id}/applies`}>
-          {isAdmin ? "管理小组" : "管理员申请"}
+          {isAdmin ? "批量导入" : "申请加入"}
         </Link>
       }
       style={{ marginBottom: "24px" }}
@@ -30,7 +29,7 @@ const GroupAdminCard = ({ group: { id, body, username, admins } }) => {
         pagination={{
           pageSize: 10,
         }}
-        dataSource={admins}
+        dataSource={likes}
         renderItem={item => (
           <List.Item>
             <List.Item.Meta
@@ -49,9 +48,7 @@ const GroupAdminCard = ({ group: { id, body, username, admins } }) => {
               title={
                 <>
                   {item.username}
-                  {user && user.username === username && (
-                    <GroupDeleteAdminButton groupId={id} name={item.username} />
-                  )}
+                {/*  TODO add a remove user button? */}
                 </>
               }
               description={moment(item.createdAt).fromNow()}
@@ -63,4 +60,4 @@ const GroupAdminCard = ({ group: { id, body, username, admins } }) => {
   );
 };
 
-export default GroupAdminCard;
+export default GroupUserCard;

@@ -73,6 +73,9 @@ const Home = props => {
     notification: (
       <List
         itemLayout="vertical"
+        pagination={{
+          pageSize: 10,
+        }}
         size="large"
         dataSource={user.notifications}
         renderItem={notification => {
@@ -106,6 +109,9 @@ const Home = props => {
     book: (
       <List
         itemLayout="vertical"
+        pagination={{
+          pageSize: 10,
+        }}
         size="large"
         dataSource={books}
         renderItem={book => {
@@ -143,6 +149,9 @@ const Home = props => {
     movie: (
       <List
         itemLayout="vertical"
+        pagination={{
+          pageSize: 10,
+        }}
         size="large"
         dataSource={movies}
         renderItem={movie => {
@@ -180,6 +189,9 @@ const Home = props => {
     group: (
       <List
         itemLayout="vertical"
+        pagination={{
+          pageSize: 10,
+        }}
         size="large"
         dataSource={groups}
         renderItem={group => {
