@@ -7,6 +7,13 @@ const userSchema = new Schema({
   createdAt: String,
   bio: { type: String, default: "" },
   isTeacher: {type: Boolean, default: false },
+  notification: [
+    {
+      body: String,
+      username: String,
+      createdAt: String
+    }
+  ],
 });
 
 module.exports = model("User", userSchema);
