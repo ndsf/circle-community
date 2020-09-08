@@ -1,21 +1,17 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
-import { AuthContext } from "../context/auth";
-import { Layout, Breadcrumb, Row, Col, Card, Avatar, List } from "antd";
+import React, {useContext, useState} from "react";
+import {Link} from "react-router-dom";
+import {useQuery} from "@apollo/react-hooks";
+import {AuthContext} from "../context/auth";
+import {Avatar, Breadcrumb, Card, Col, Layout, List, Row} from "antd";
 import moment from "moment";
-import {
-  FETCH_BOOKS_QUERY,
-  FETCH_MOVIES_QUERY,
-  FETCH_GROUPS_QUERY
-} from "../utils/graphql";
+import {FETCH_BOOKS_QUERY, FETCH_GROUPS_QUERY, FETCH_MOVIES_QUERY} from "../utils/graphql";
 
-const { Content, Footer } = Layout;
-const { Meta } = Card;
+const {Content, Footer} = Layout;
+const {Meta} = Card;
 
 const Home = props => {
   let username;
-  const { user } = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
 
   if (props.match.params.username) {
     username = props.match.params.username;
@@ -27,21 +23,38 @@ const Home = props => {
 
   const {
     loading: loadingBooks,
-    data: { getBooks: books }
+    data: {getBooks: books}
   } = useQuery(FETCH_BOOKS_QUERY);
 
   const {
     loading: loadingMovies,
-    data: { getMovies: movies }
+    data: {getMovies: movies}
   } = useQuery(FETCH_MOVIES_QUERY);
 
   const {
     loading: loadingGroups,
-    data: { getGroups: groups }
+    data: {getGroups: groups}
   } = useQuery(FETCH_GROUPS_QUERY);
 
   const [noTitleKey, setNoTitleKey] = useState("book");
-  const tabListNoTitle = [
+  const tabListNoTitle = user && username === user.username ? [
+    {
+      key: "notification",
+      tab: "通知"
+    },
+    {
+      key: "book",
+      tab: "书评"
+    },
+    {
+      key: "movie",
+      tab: "影评"
+    },
+    {
+      key: "group",
+      tab: "小组"
+    }
+  ] : [
     {
       key: "book",
       tab: "书评"
@@ -57,6 +70,39 @@ const Home = props => {
   ];
 
   const contentListNoTitle = {
+    notification: (
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={user.notifications}
+        renderItem={notification => {
+          // let comments = notification.comments.filter(c => c.username === username);
+          return (
+            <List.Item key={notification.id}>
+              <List.Item.Meta
+                avatar={
+                  <Link to={`/users/${notification.username}`}>
+                    <Avatar
+                      style={{
+                        color: "#f56a00",
+                        backgroundColor: "#fde3cf"
+                      }}
+                    >
+                      {notification.username}
+                    </Avatar>
+                  </Link>
+                }
+                title={<Link to={`/books/${notification.id}`}>来自 {notification.username} 的通知</Link>}
+                description={`${notification.username} 于 ${moment(
+                  notification.createdAt
+                ).fromNow()} 发送`}
+              />
+              {notification.body}
+            </List.Item>
+          );
+        }}
+      />
+    ),
     book: (
       <List
         itemLayout="vertical"
@@ -178,8 +224,8 @@ const Home = props => {
     <></>
   ) : (
     <Layout className="layout">
-      <Content style={{ padding: "0 24px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }}>
+      <Content style={{padding: "0 24px"}}>
+        <Breadcrumb style={{margin: "16px 0"}}>
           <Breadcrumb.Item>用户</Breadcrumb.Item>
           <Breadcrumb.Item>{username}</Breadcrumb.Item>
         </Breadcrumb>
@@ -191,7 +237,7 @@ const Home = props => {
                 activeTabKey={noTitleKey}
                 onTabChange={key => setNoTitleKey(key)}
                 bordered={false}
-                style={{ marginBottom: "24px" }}
+                style={{marginBottom: "24px"}}
               >
                 {contentListNoTitle[noTitleKey]}
               </Card>
@@ -204,13 +250,13 @@ const Home = props => {
                     : []
                 }
                 bordered={false}
-                style={{ marginBottom: "24px" }}
+                style={{marginBottom: "24px"}}
               >
                 <Meta
                   avatar={
                     <Link to={`/users/${username}`}>
                       <Avatar
-                        style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                        style={{color: "#f56a00", backgroundColor: "#fde3cf"}}
                       >
                         {username}
                       </Avatar>
@@ -221,7 +267,7 @@ const Home = props => {
               </Card>
               <Card
                 bordered={false}
-                style={{ marginBottom: "24px" }}
+                style={{marginBottom: "24px"}}
                 title="加入的小组"
               >
                 <List
@@ -233,7 +279,7 @@ const Home = props => {
                   renderItem={item => (
                     <List.Item>
                       <List.Item.Meta
-                        avatar={<Avatar src={item.avatar} />}
+                        avatar={<Avatar src={item.avatar}/>}
                         title={
                           <Link to={`/groups/${item.id}`}>{item.body}</Link>
                         }
@@ -246,7 +292,7 @@ const Home = props => {
           </Row>
         </div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>
+      <Footer style={{textAlign: "center"}}>
         Awesome Douban Created by ndsf
       </Footer>
     </Layout>
