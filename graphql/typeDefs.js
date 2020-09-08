@@ -185,6 +185,7 @@ module.exports = gql`
     createGroup(body: String!, bio: String!, avatar: String!): Group!
     deleteGroup(groupId: ID!): String!
     likeGroup(groupId: ID!): Group!
+    importGroupLikes(groupId: ID!, usernames: String!): Group! # split into usernames
     createGroupPost(groupId: ID!, title: String!, body: String!): Group!
     deleteGroupPost(groupId: ID!, postId: ID!, reason: String!): Group!
     reportGroupPost(groupId: ID!, postId: ID!): Group!

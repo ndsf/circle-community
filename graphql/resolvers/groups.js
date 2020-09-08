@@ -128,6 +128,39 @@ module.exports = {
         return group;
       } else throw new UserInputError("Group not found");
     },
+    importGroupLikes: async (_, {groupId, usernames}, context) => {
+      const {username} = checkAuth(context);
+
+      const group = await Group.findById(groupId);
+
+      if (group) {
+        if (
+          group.admins.find(a => a.username === username) ||
+          group.username === username
+        ) {
+          const names = usernames.split(' ');
+          for (const name in names) {
+            if (!group.likes.find(like => like.username === username)) {
+              // Not liked, like group
+              group.likes.push({
+                username,
+                createdAt: new Date().toISOString()
+              });
+            }
+          }
+          await group.save();
+          group.posts = [
+            ...group.posts.filter(post => post.top),
+            ...group.posts.filter(post => !post.top)
+          ];
+          return group;
+        } else {
+          throw new AuthenticationError("Action not allowed");
+        }
+      } else {
+        throw new UserInputError("Group not found");
+      }
+    },
     createGroupPost: async (_, {groupId, title, body}, context) => {
       const {username} = checkAuth(context);
 
