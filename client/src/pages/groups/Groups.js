@@ -136,7 +136,7 @@ const Groups = () => {
                 </List.Item>
               )}
             />
-            {user && user.username === "ndsf" && (
+            {user && user.isTeacher && (
               <>
                 <div className="line-raw">
                   <Divider>

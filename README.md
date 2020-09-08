@@ -57,6 +57,13 @@ SECRET_KEY='TopSecretDontLetOtherPeopleKnow'
 PORT=5000
 ```
 
+For example:
+```
+MONGO_URI='mongodb://localhost/group'
+SECRET_KEY='TopSecretDontLetOtherPeopleKnow'
+PORT=5000
+```
+
 ### Up and Running
 
 ```

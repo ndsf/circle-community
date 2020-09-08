@@ -14,11 +14,13 @@ const {
 const User = require("../../models/User");
 
 const generateToken = user => {
+    // modify this after adding keys to the user model
   return jwt.sign(
     {
       id: user.id,
       email: user.email,
-      username: user.username
+      username: user.username,
+      isTeacher: user.isTeacher
     },
     process.env.SECRET_KEY,
     { expiresIn: "24h" }

@@ -55,7 +55,7 @@ const MovieForm = () => {
   const props = {
     name: "file",
     accept: ".png, .jpg, .jpeg",
-    action: "http://114.115.149.7:5000/upload",
+    action: "http://localhost:5000/upload",
     onChange(info) {
       if (info.file.status !== "uploading") {
         console.log(info.file, info.fileList);

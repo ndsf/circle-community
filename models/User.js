@@ -5,7 +5,8 @@ const userSchema = new Schema({
   password: String,
   email: String,
   createdAt: String,
-  bio: { type: String, default: "" }
+  bio: { type: String, default: "" },
+  isTeacher: {type: Boolean, default: false },
 });
 
 module.exports = model("User", userSchema);
