@@ -1,4 +1,4 @@
-const { ApolloServer, PubSub } = require("apollo-server-express");
+const {ApolloServer, PubSub} = require("apollo-server-express");
 const mongoose = require("mongoose");
 const express = require("express");
 const fileUpload = require("express-fileupload");
@@ -6,7 +6,7 @@ const path = require("path");
 
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
-const { slugify } = require("transliteration");
+const {slugify} = require("transliteration");
 require("dotenv").config();
 
 const pubsub = new PubSub();
@@ -14,7 +14,7 @@ const pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ req, pubsub })
+  context: ({req}) => ({req, pubsub})
 });
 
 const app = express();
@@ -23,15 +23,23 @@ app.use(fileUpload());
 // Upload Endpoint
 app.post("/upload", (req, res) => {
   if (req.files === null) {
-    return res.status(400).json({ msg: "No file uploaded" });
+    return res.status(400).json({msg: "No file uploaded"});
   }
 
   const file = req.files.file;
 
-  file.mv(
-    `${__dirname}/client/build/uploads/${slugify(file.name, {
+  let filepath;
+  if (process.env.NODE_ENV === "production")
+    filepath = `${__dirname}/client/build/uploads/${slugify(file.name, {
       ignore: ["."]
-    })}`,
+    })}`;
+  else
+    filepath = `${__dirname}/client/public/uploads/${slugify(file.name, {
+      ignore: ["."]
+    })}`;
+
+  file.mv(
+    filepath,
     err => {
       if (err) {
         console.error(err);
@@ -39,8 +47,8 @@ app.post("/upload", (req, res) => {
       }
 
       res.json({
-        fileName: slugify(file.name, { ignore: ["."] }),
-        filePath: `/uploads/${slugify(file.name, { ignore: ["."] })}`
+        fileName: slugify(file.name, {ignore: ["."]}),
+        filePath: `/uploads/${slugify(file.name, {ignore: ["."]})}`
       });
     }
   );
@@ -54,13 +62,13 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-server.applyMiddleware({ app, path: "/" });
+server.applyMiddleware({app, path: "/"});
 
 const port = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }).then(() => {
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true}).then(() => {
   console.log("MongoDB connected");
-  return app.listen({ port }, () => {
+  return app.listen({port}, () => {
     console.log(`Server running at ${port}`);
   });
 });
