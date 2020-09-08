@@ -5,18 +5,19 @@ const {
 
 const Group = require("../../models/Group");
 const checkAuth = require("../../utils/check-auth");
+const User = require("../../models/User");
 
 module.exports = {
   Query: {
     getGroups: async () => {
       try {
-        const groups = await Group.find().sort({ createdAt: -1 });
+        const groups = await Group.find().sort({createdAt: -1});
         return groups;
       } catch (err) {
         throw new Error(err);
       }
     },
-    getGroup: async (_, { groupId }) => {
+    getGroup: async (_, {groupId}) => {
       try {
         const group = await Group.findById(groupId);
         if (group) {
@@ -32,17 +33,17 @@ module.exports = {
         throw new Error(err);
       }
     },
-    getGroupsByBody: async (_, { keyword }) => {
+    getGroupsByBody: async (_, {keyword}) => {
       try {
         const groups = await Group.find({
-          body: { $regex: keyword, $options: "i" }
+          body: {$regex: keyword, $options: "i"}
         });
         return groups;
       } catch (err) {
         throw new Error(err);
       }
     },
-    getGroupPost: async (_, { groupId, postId }) => {
+    getGroupPost: async (_, {groupId, postId}) => {
       try {
         const group = await Group.findById(groupId);
         if (group) {
@@ -58,7 +59,7 @@ module.exports = {
     }
   },
   Mutation: {
-    createGroup: async (_, { body, bio, avatar }, context) => {
+    createGroup: async (_, {body, bio, avatar}, context) => {
       const user = checkAuth(context);
 
       if (body.trim() === "") {
@@ -87,7 +88,7 @@ module.exports = {
 
       return group;
     },
-    deleteGroup: async (_, { groupId }, context) => {
+    deleteGroup: async (_, {groupId}, context) => {
       const user = checkAuth(context);
 
       try {
@@ -102,8 +103,8 @@ module.exports = {
         throw new Error(err);
       }
     },
-    likeGroup: async (_, { groupId }, context) => {
-      const { username } = checkAuth(context);
+    likeGroup: async (_, {groupId}, context) => {
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -127,8 +128,8 @@ module.exports = {
         return group;
       } else throw new UserInputError("Group not found");
     },
-    createGroupPost: async (_, { groupId, title, body }, context) => {
-      const { username } = checkAuth(context);
+    createGroupPost: async (_, {groupId, title, body}, context) => {
+      const {username} = checkAuth(context);
 
       if (body.trim() === "") {
         throw new UserInputError("Empty post", {
@@ -159,8 +160,8 @@ module.exports = {
         return group;
       } else throw new UserInputError("Group not found, or not joined");
     },
-    deleteGroupPost: async (_, { groupId, postId }, context) => {
-      const { username } = checkAuth(context);
+    deleteGroupPost: async (_, {groupId, postId, reason}, context) => {
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -180,6 +181,17 @@ module.exports = {
             ...group.posts.filter(post => post.top),
             ...group.posts.filter(post => !post.top)
           ];
+          // send a notification
+          const receiverUser = await User.findOne({username: post.username});
+
+          if (receiverUser)
+            receiverUser.notifications.unshift({
+              body: reason,
+              username,
+              createdAt: new Date().toISOString()
+            });
+          await receiverUser.save();
+
           return group;
         } else {
           throw new AuthenticationError("Action not allowed");
@@ -188,8 +200,8 @@ module.exports = {
         throw new UserInputError("Group not found");
       }
     },
-    likeGroupPost: async (_, { groupId, postId }, context) => {
-      const { username } = checkAuth(context);
+    likeGroupPost: async (_, {groupId, postId}, context) => {
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -217,8 +229,8 @@ module.exports = {
         } else throw new UserInputError("Post not found");
       } else throw new UserInputError("Group not found, or not liked");
     },
-    topGroupPost: async (_, { groupId, postId }, context) => {
-      const { username } = checkAuth(context);
+    topGroupPost: async (_, {groupId, postId}, context) => {
+      const {username} = checkAuth(context);
       const group = await Group.findById(groupId);
       if (group) {
         const postIndex = group.posts.findIndex(p => p.id === postId);
@@ -242,8 +254,8 @@ module.exports = {
         throw new UserInputError("Group not found");
       }
     },
-    qualifiedGroupPost: async (_, { groupId, postId }, context) => {
-      const { username } = checkAuth(context);
+    qualifiedGroupPost: async (_, {groupId, postId}, context) => {
+      const {username} = checkAuth(context);
       const group = await Group.findById(groupId);
       if (group) {
         const postIndex = group.posts.findIndex(p => p.id === postId);
@@ -269,10 +281,10 @@ module.exports = {
     },
     createGroupPostComment: async (
       _,
-      { groupId, postId, title, body },
+      {groupId, postId, title, body},
       context
     ) => {
-      const { username } = checkAuth(context);
+      const {username} = checkAuth(context);
       if (body.trim() === "") {
         throw new UserInputError("Empty comment", {
           errors: {
@@ -299,10 +311,10 @@ module.exports = {
     },
     deleteGroupPostComment: async (
       _,
-      { groupId, postId, commentId },
+      {groupId, postId, commentId},
       context
     ) => {
-      const { username } = checkAuth(context);
+      const {username} = checkAuth(context);
       const group = await Group.findById(groupId);
       if (group) {
         const postIndex = group.posts.findIndex(p => p.id === postId);
@@ -326,8 +338,8 @@ module.exports = {
         } else throw new UserInputError("Post not found");
       } else throw new UserInputError("Group not found");
     },
-    applyGroupAdmin: async (_, { groupId, title, body }, context) => {
-      const { username } = checkAuth(context);
+    applyGroupAdmin: async (_, {groupId, title, body}, context) => {
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -359,8 +371,8 @@ module.exports = {
           "Group not found, or the user is already an admin, or the user is the creator of the group"
         );
     },
-    grantGroupAdmin: async (_, { groupId, name }, context) => {
-      const { username } = checkAuth(context);
+    grantGroupAdmin: async (_, {groupId, name}, context) => {
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -392,8 +404,8 @@ module.exports = {
         throw new UserInputError("Group not found or user is not the creator");
       }
     },
-    reportGroupPost: async (_, { groupId, postId }, context) => {
-      const { username } = checkAuth(context);
+    reportGroupPost: async (_, {groupId, postId}, context) => {
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -425,10 +437,10 @@ module.exports = {
     },
     removeGroupPostReport: async (
       _,
-      { groupId, postId, reportId },
+      {groupId, postId, reportId},
       context
     ) => {
-      const { username } = checkAuth(context);
+      const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
 
@@ -453,10 +465,10 @@ module.exports = {
     },
     createGroupPostSecondaryComment: async (
       _,
-      { groupId, postId, commentId, title, body },
+      {groupId, postId, commentId, title, body},
       context
     ) => {
-      const { username } = checkAuth(context);
+      const {username} = checkAuth(context);
       if (body.trim() === "") {
         throw new UserInputError("Empty comment", {
           errors: {
@@ -486,10 +498,10 @@ module.exports = {
     },
     deleteGroupPostSecondaryComment: async (
       _,
-      { groupId, postId, commentId, secondaryId },
+      {groupId, postId, commentId, secondaryId},
       context
     ) => {
-      const { username } = checkAuth(context);
+      const {username} = checkAuth(context);
       const group = await Group.findById(groupId);
       if (group) {
         const postIndex = group.posts.findIndex(p => p.id === postId);
@@ -521,7 +533,7 @@ module.exports = {
   },
   Subscription: {
     newGroup: {
-      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_GROUP")
+      subscribe: (_, __, {pubsub}) => pubsub.asyncIterator("NEW_GROUP")
     }
   }
 };

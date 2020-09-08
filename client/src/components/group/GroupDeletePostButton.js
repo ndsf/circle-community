@@ -7,7 +7,8 @@ const GroupDeletePostButton = ({ groupId, postId, callback }) => {
   const [deleteGroupPost] = useMutation(DELETE_GROUP_POST_MUTATION, {
     variables: {
       groupId,
-      postId
+      postId,
+      reason: "你的帖子被删除了" //TODO custom reason
     },
     update(proxy) {
       if (callback) callback();
@@ -31,8 +32,8 @@ const GroupDeletePostButton = ({ groupId, postId, callback }) => {
 };
 
 const DELETE_GROUP_POST_MUTATION = gql`
-  mutation deleteGroupPost($groupId: ID!, $postId: ID!) {
-    deleteGroupPost(groupId: $groupId, postId: $postId) {
+  mutation deleteGroupPost($groupId: ID!, $postId: ID!, $reason: String!) {
+    deleteGroupPost(groupId: $groupId, postId: $postId, reason: $reason) {
       id
       posts {
         id

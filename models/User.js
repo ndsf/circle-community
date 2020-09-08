@@ -7,7 +7,7 @@ const userSchema = new Schema({
   createdAt: String,
   bio: { type: String, default: "" },
   isTeacher: {type: Boolean, default: false },
-  notification: [
+  notifications: [
     {
       body: String,
       username: String,

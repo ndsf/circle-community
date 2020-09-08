@@ -97,6 +97,13 @@ module.exports = gql`
     username: String!
     createdAt: String!
   }
+  
+  type Notification {
+    id: ID!
+    body: String!
+    username: String!
+    createdAt: String!
+  }
 
   type User {
     id: ID!
@@ -104,6 +111,8 @@ module.exports = gql`
     token: String!
     username: String!
     createdAt: String!
+    isTeacher: Boolean!
+    notifications: [Notification]!
   }
 
   input RegisterInput {
@@ -134,6 +143,7 @@ module.exports = gql`
     login(username: String!, password: String!): User!
     changePassword(password: String!): User!
     resetPassword(username: String!, email: String!): User!
+    sendNotification(username: String!, body: String!): String!
     createPost(body: String!): Post!
     deletePost(postId: ID!): String!
     createComment(postId: ID!, title: String, body: String!): Post!
@@ -176,7 +186,7 @@ module.exports = gql`
     deleteGroup(groupId: ID!): String!
     likeGroup(groupId: ID!): Group!
     createGroupPost(groupId: ID!, title: String!, body: String!): Group!
-    deleteGroupPost(groupId: ID!, postId: ID!): Group!
+    deleteGroupPost(groupId: ID!, postId: ID!, reason: String!): Group!
     reportGroupPost(groupId: ID!, postId: ID!): Group!
     removeGroupPostReport(groupId: ID!, postId: ID!, reportId: ID!): Group!
     likeGroupPost(groupId: ID!, postId: ID!): Group!

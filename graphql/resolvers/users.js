@@ -14,13 +14,14 @@ const {
 const User = require("../../models/User");
 
 const generateToken = user => {
-    // modify this after adding keys to the user model
+  // modify this after adding keys to the user model
   return jwt.sign(
     {
       id: user.id,
       email: user.email,
       username: user.username,
-      isTeacher: user.isTeacher
+      isTeacher: user.isTeacher,
+      notifications: user.notifications
     },
     process.env.SECRET_KEY,
     { expiresIn: "24h" }
@@ -106,7 +107,9 @@ module.exports = {
         email,
         username,
         password,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        isTeacher: false,
+        notifications: []
       });
 
       const result = await newUser.save();
@@ -188,6 +191,21 @@ module.exports = {
 
         await user.save();
         return user;
+      } else throw new UserInputError("User not found", { errors });
+    },
+    sendNotification: async (_, { username: receiver, body }, context) => {
+      const { username } = checkAuth(context);
+      const receiverUser = await User.findOne({ receiver });
+
+      if (receiverUser) {
+        receiverUser.notifications.unshift({
+          body,
+          username,
+          createdAt: new Date().toISOString()
+        });
+
+        await receiverUser.save();
+        return '发送成功';
       } else throw new UserInputError("User not found", { errors });
     }
   }
