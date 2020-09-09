@@ -4,7 +4,7 @@ export default function() {
   return (
     <div className="footer">
       <div className="footer-block content-origin">
-        <span>Awesome Douban Created by ndsf</span>
+        <span>Circle Community Created by ndsf</span>
       </div>
     </div>
   );

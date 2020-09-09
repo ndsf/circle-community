@@ -67,7 +67,7 @@ const GroupApply = props => {
           </div>
         </Content>
         <Footer style={{textAlign: "center"}}>
-          Awesome Douban Created by ndsf
+          Circle Community Created by ndsf
         </Footer>
       </Layout>
     );

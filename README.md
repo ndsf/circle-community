@@ -1,4 +1,4 @@
-# Awesome Douban Social App - MERNG Stack
+# Circle Community Social App - MERNG Stack
 
 MERNG stands for MongoDB, Express, React, Node.js & GraphQL. This is a simple social app which user may comment or like on other users post.
 [Demo Site](https://mysterious-thicket-27635.herokuapp.com/)
