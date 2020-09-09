@@ -9,7 +9,7 @@ import moment from "moment";
 
 const {TextArea} = Input;
 
-const GroupApplyAdmissionCard = ({group: {id: groupId, username, likes, admissions, admissionCount}}) => {
+const GroupApplyAdmissionCard = ({group: {id: groupId, username, likes, admissions, admissionCount, admins}}) => {
   const {user} = useContext(AuthContext);
 
   const admissionInputRef = useRef(null);
@@ -85,7 +85,7 @@ const GroupApplyAdmissionCard = ({group: {id: groupId, username, likes, admissio
             <li key={item.id}>
               <Comment
                 actions={
-                  user && user.username === username
+                  user && (user.username === username || admins.find(admin => admin.username === user.username))
                     ? [
                       <GroupGrantAdmissionButton
                         groupId={groupId}

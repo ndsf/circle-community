@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { Icon } from "antd";
+import { Icon, message } from "antd";
 
-const GroupLikeButton = ({ user, group: { id, likeCount, likes } }) => {
+const GroupLikeButton = ({ user, group: { id, username, likeCount, likes, admins} }) => {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -16,8 +16,14 @@ const GroupLikeButton = ({ user, group: { id, likeCount, likes } }) => {
     variables: { groupId: id }
   });
 
+  const likeGroupWrapper = () => {
+    if (user.username === username || admins.find(admin => admin.username === user.username)) message.error("创建者和管理员不能退出小组");
+    else if (!liked) message.error("请在小组页面申请加入小组");
+    else likeGroup();
+  }
+
   return user ? (
-    <span onClick={likeGroup}>
+    <span onClick={likeGroupWrapper}>
       <Icon
         theme={liked ? "twoTone" : ""}
         twoToneColor="#eb2f96"

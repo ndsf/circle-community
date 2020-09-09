@@ -37,7 +37,7 @@ const GroupApplyAdminCard = ({group: {id: groupId, username, likes, admins, appl
       (applies.find(apply => apply.username === user.username) &&
       likes.find(like => like.username === user.username) ? (
         <Card
-          title="发表申请"
+          title="申请成为管理员"
           bordered={false}
           style={{marginBottom: "24px"}}
         >
@@ -45,7 +45,7 @@ const GroupApplyAdminCard = ({group: {id: groupId, username, likes, admins, appl
         </Card>
       ) : (
         <Card
-          title="发表申请"
+          title="申请成为管理员"
           bordered={false}
           style={{marginBottom: "24px"}}
         >

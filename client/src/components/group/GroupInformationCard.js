@@ -9,7 +9,7 @@ import { AuthContext } from "../../context/auth";
 const { Meta } = Card;
 
 const GroupInformationCard = ({
-  group: { id, body, username, createdAt, bio, avatar, likes, likeCount },
+  group: { id, body, username, createdAt, bio, avatar, likes, likeCount, admins },
   deleteGroupCallback
 }) => {
   const { user } = useContext(AuthContext);
@@ -17,10 +17,10 @@ const GroupInformationCard = ({
   let groupActions =
     user && user.username === username
       ? [
-          <GroupLikeButton user={user} group={{ id, likes, likeCount }} />,
+          <GroupLikeButton user={user} group={{ id, username, likes, likeCount, admins }} />,
           <GroupDeleteButton groupId={id} callback={deleteGroupCallback} />
         ]
-      : [<GroupLikeButton user={user} group={{ id, likes, likeCount }} />];
+      : [<GroupLikeButton user={user} group={{ id, username, likes, likeCount, admins }} />];
 
   return (
     <Card

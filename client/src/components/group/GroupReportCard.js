@@ -24,6 +24,9 @@ const GroupReportCard = ({group: {id: groupId, username, admins, posts}}) => {
         <List
           className="comment-list"
           itemLayout="horizontal"
+          pagination={{
+            pageSize: 10,
+          }}
           dataSource={posts}
           renderItem={post => (
             <div key={post.id}>
