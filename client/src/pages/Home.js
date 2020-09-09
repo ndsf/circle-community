@@ -39,40 +39,40 @@ const Home = props => {
 
   const {
     loading: loadingUser,
-    data: { getUser }
+    data: {getUser}
   } = useQuery(FETCH_USER_QUERY, {
     variables: {
       username
     }
   });
 
-  const [noTitleKey, setNoTitleKey] = useState("book");
+  const [noTitleKey, setNoTitleKey] = useState("group");
   const tabListNoTitle = user && username === user.username ? [
     {
       key: "notification",
       tab: "通知"
     },
-    {
-      key: "book",
-      tab: "书评"
-    },
-    {
-      key: "movie",
-      tab: "影评"
-    },
+    // {
+    //   key: "book",
+    //   tab: "书评"
+    // },
+    // {
+    //   key: "movie",
+    //   tab: "影评"
+    // },
     {
       key: "group",
       tab: "小组"
     }
   ] : [
-    {
-      key: "book",
-      tab: "书评"
-    },
-    {
-      key: "movie",
-      tab: "影评"
-    },
+    // {
+    //   key: "book",
+    //   tab: "书评"
+    // },
+    // {
+    //   key: "movie",
+    //   tab: "影评"
+    // },
     {
       key: "group",
       tab: "小组"
@@ -87,7 +87,8 @@ const Home = props => {
           pageSize: 10,
         }}
         size="large"
-        dataSource={getUser.notifications}
+        loading={loadingUser}
+        dataSource={loadingUser ? [] : getUser.notifications}
         renderItem={notification => {
           // let comments = notification.comments.filter(c => c.username === username);
           return (

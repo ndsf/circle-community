@@ -45,7 +45,8 @@ function App() {
       <AuthProvider>
         <Router>
           <MenuBar />
-          <Route exact path="/" component={Homepage} />
+          {/*<Route exact path="/" component={Homepage} /> */}
+          <Route exact path="/" component={Home} />
           <Route exact path="/users/" component={Home} />
           <Route exact path="/users/:username" component={Home} />
           <Route exact path="/books" component={Books} />

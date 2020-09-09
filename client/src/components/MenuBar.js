@@ -19,12 +19,12 @@ const MenuBar = () => {
       <Menu.Item key="homepage" onClick={handleItemClick}>
         <Link to="/">首页</Link>
       </Menu.Item>
-      <Menu.Item key="books" onClick={handleItemClick}>
-        <Link to="/books">书籍</Link>
-      </Menu.Item>
-      <Menu.Item key="movies" onClick={handleItemClick}>
-        <Link to="/movies">影视</Link>
-      </Menu.Item>
+      {/*<Menu.Item key="books" onClick={handleItemClick}>*/}
+      {/*  <Link to="/books">书籍</Link>*/}
+      {/*</Menu.Item>*/}
+      {/*<Menu.Item key="movies" onClick={handleItemClick}>*/}
+      {/*  <Link to="/movies">影视</Link>*/}
+      {/*</Menu.Item>*/}
       <Menu.Item key="groups" onClick={handleItemClick}>
         <Link to="/groups">小组</Link>
       </Menu.Item>
@@ -40,12 +40,12 @@ const MenuBar = () => {
       <Menu.Item key="homepage" onClick={handleItemClick}>
         <Link to="/">主页</Link>
       </Menu.Item>
-      <Menu.Item key="books" onClick={handleItemClick}>
-        <Link to="/books">书籍</Link>
-      </Menu.Item>
-      <Menu.Item key="movies" onClick={handleItemClick}>
-        <Link to="/movies">影视</Link>
-      </Menu.Item>
+      {/*<Menu.Item key="books" onClick={handleItemClick}>*/}
+      {/*  <Link to="/books">书籍</Link>*/}
+      {/*</Menu.Item>*/}
+      {/*<Menu.Item key="movies" onClick={handleItemClick}>*/}
+      {/*  <Link to="/movies">影视</Link>*/}
+      {/*</Menu.Item>*/}
       <Menu.Item key="groups" onClick={handleItemClick}>
         <Link to="/groups">小组</Link>
       </Menu.Item>
