@@ -125,6 +125,7 @@ module.exports = gql`
   }
 
   type Query {
+    getUser(username: String!): User
     getPosts: [Post]
     getPost(postId: ID!): Post
     getPostsByBody(keyword: String!): [Post]

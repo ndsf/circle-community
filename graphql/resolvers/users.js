@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { UserInputError } = require("apollo-server-express");
+const {UserInputError} = require("apollo-server-express");
 const checkAuth = require("../../utils/check-auth");
 ("use strict");
 const nodemailer = require("nodemailer");
@@ -20,11 +20,10 @@ const generateToken = user => {
       id: user.id,
       email: user.email,
       username: user.username,
-      isTeacher: user.isTeacher,
       notifications: user.notifications
     },
     process.env.SECRET_KEY,
-    { expiresIn: "24h" }
+    {expiresIn: "24h"}
   );
 };
 
@@ -40,26 +39,32 @@ const makeid = length => {
 };
 
 module.exports = {
+  Query: {
+    getUser: async (_, {username}) => {
+      return await User.findOne({username});
+      // TODO remove password from user
+    }
+  },
   Mutation: {
-    async login(_, { username, password }) {
-      const { errors, valid } = validateLoginInput(username, password);
+    async login(_, {username, password}) {
+      const {errors, valid} = validateLoginInput(username, password);
 
       if (!valid) {
-        throw new UserInputError("Something went wrong", { errors });
+        throw new UserInputError("Something went wrong", {errors});
       }
 
-      const user = await User.findOne({ username });
+      const user = await User.findOne({username});
 
       if (!user) {
         errors.general = "User not found";
-        throw new UserInputError("User not found", { errors });
+        throw new UserInputError("User not found", {errors});
       }
 
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
         errors.general = "Wrong credentials";
-        throw new UserInputError("Wrong credentials", { errors });
+        throw new UserInputError("Wrong credentials", {errors});
       }
 
       const token = generateToken(user);
@@ -73,12 +78,12 @@ module.exports = {
     async register(
       _,
       {
-        registerInput: { username, email, password, confirmPassword }
+        registerInput: {username, email, password, confirmPassword}
       },
       context,
       info
     ) {
-      const { valid, errors } = validateRegisterInput(
+      const {valid, errors} = validateRegisterInput(
         username,
         email,
         password,
@@ -86,7 +91,7 @@ module.exports = {
       );
 
       if (!valid) {
-        throw new UserInputError("Something went wrong", { errors });
+        throw new UserInputError("Something went wrong", {errors});
       }
       // TODO Make sure user doesn't already exist
       const user = await User.findOne({
@@ -122,21 +127,21 @@ module.exports = {
         token
       };
     },
-    changePassword: async (_, { password }, context) => {
-      const { username } = checkAuth(context);
-      const user = await User.findOne({ username });
-      const { errors, valid } = validateLoginInput(username, password);
+    changePassword: async (_, {password}, context) => {
+      const {username} = checkAuth(context);
+      const user = await User.findOne({username});
+      const {errors, valid} = validateLoginInput(username, password);
       if (!valid) {
-        throw new UserInputError("Something went wrong", { errors });
+        throw new UserInputError("Something went wrong", {errors});
       }
       user.password = await bcrypt.hash(password, 12);
       await user.save();
       return user;
     },
-    resetPassword: async (_, { username, email }, context) => {
-      const user = await User.findOne({ username, email });
+    resetPassword: async (_, {username, email}, context) => {
+      const user = await User.findOne({username, email});
       if (user) {
-        password = makeid(10);
+        let password = makeid(10);
         user.password = await bcrypt.hash(password, 12);
 
         // Generate test SMTP service account from ethereal.email
@@ -191,11 +196,11 @@ module.exports = {
 
         await user.save();
         return user;
-      } else throw new UserInputError("User not found", { errors });
+      } else throw new UserInputError("User not found", {errors});
     },
-    sendNotification: async (_, { username: receiver, body }, context) => {
-      const { username } = checkAuth(context);
-      const receiverUser = await User.findOne({ receiver });
+    sendNotification: async (_, {username: receiver, body}, context) => {
+      const {username} = checkAuth(context);
+      const receiverUser = await User.findOne({receiver});
 
       if (receiverUser) {
         receiverUser.notifications.unshift({
@@ -206,7 +211,7 @@ module.exports = {
 
         await receiverUser.save();
         return '发送成功';
-      } else throw new UserInputError("User not found", { errors });
+      } else throw new UserInputError("User not found", {errors});
     }
   }
 };

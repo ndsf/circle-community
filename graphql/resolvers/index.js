@@ -37,7 +37,8 @@ module.exports = {
     ...postsResolvers.Query,
     ...booksResolvers.Query,
     ...moviesResolvers.Query,
-    ...groupsResolvers.Query
+    ...groupsResolvers.Query,
+    ...usersResolvers.Query
   },
   Mutation: {
     ...usersResolvers.Mutation,

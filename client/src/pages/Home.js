@@ -4,13 +4,14 @@ import {useQuery} from "@apollo/react-hooks";
 import {AuthContext} from "../context/auth";
 import {Avatar, Breadcrumb, Card, Col, Layout, List, Row} from "antd";
 import moment from "moment";
-import {FETCH_BOOKS_QUERY, FETCH_GROUPS_QUERY, FETCH_MOVIES_QUERY} from "../utils/graphql";
+import {FETCH_BOOKS_QUERY, FETCH_GROUPS_QUERY, FETCH_MOVIES_QUERY, FETCH_USER_QUERY} from "../utils/graphql";
 
 const {Content, Footer} = Layout;
 const {Meta} = Card;
 
 const Home = props => {
   let username;
+
   const {user} = useContext(AuthContext);
 
   if (props.match.params.username) {
@@ -35,6 +36,15 @@ const Home = props => {
     loading: loadingGroups,
     data: {getGroups: groups}
   } = useQuery(FETCH_GROUPS_QUERY);
+
+  const {
+    loading: loadingUser,
+    data: { getUser }
+  } = useQuery(FETCH_USER_QUERY, {
+    variables: {
+      username
+    }
+  });
 
   const [noTitleKey, setNoTitleKey] = useState("book");
   const tabListNoTitle = user && username === user.username ? [
@@ -77,7 +87,7 @@ const Home = props => {
           pageSize: 10,
         }}
         size="large"
-        dataSource={user.notifications}
+        dataSource={getUser.notifications}
         renderItem={notification => {
           // let comments = notification.comments.filter(c => c.username === username);
           return (

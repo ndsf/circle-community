@@ -232,3 +232,21 @@ export const FETCH_GROUPS_BY_BODY_QUERY = gql`
     }
   }
 `;
+
+export const FETCH_USER_QUERY = gql`
+    query getUser($username: String!) {
+        getUser(username: $username) {
+            id
+            username
+            email
+            createdAt
+            isTeacher
+            notifications {
+                id
+                body
+                createdAt
+                username
+            }
+        }
+    }
+`;

@@ -7,7 +7,7 @@ import { Layout, Card, Avatar, List, Skeleton, Divider } from "antd";
 import { AuthContext } from "../../context/auth";
 import GroupForm from "../../components/group/GroupForm";
 import SearchGroupForm from "../../components/group/SearchGroupForm";
-import { FETCH_GROUPS_QUERY } from "../../utils/graphql";
+import {FETCH_GROUPS_QUERY, FETCH_USER_QUERY} from "../../utils/graphql";
 import "../../css/w3.css";
 import groupsImg from "../../assets/groups.jpg";
 
@@ -22,7 +22,16 @@ const Groups = () => {
     data: { getGroups: groups }
   } = useQuery(FETCH_GROUPS_QUERY);
 
-  return loading ? (
+  const {
+    loading: loadingUser,
+    data: { getUser }
+  } = useQuery(FETCH_USER_QUERY, {
+    variables: {
+      username: user.username
+    }
+  });
+
+  return (loading || loadingUser) ? (
     <>
       <header
         className="w3-display-container w3-content w3-wide"
@@ -136,7 +145,7 @@ const Groups = () => {
                 </List.Item>
               )}
             />
-            {user && user.isTeacher && (
+            {user && getUser.isTeacher && (
               <>
                 <div className="line-raw">
                   <Divider>
