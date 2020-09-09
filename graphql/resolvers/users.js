@@ -160,10 +160,10 @@ module.exports = {
         }); */
 
         let transporter = nodemailer.createTransport({
-          process.env.SMTP_SERVICE, //service: "qq",
-          process.env.SMTP_HOST, // host: "smtp.qq.com",
-          process.env.SMTP_PORT, // port: 587,
-          process.env.SMTP_SECURE, // secure: false, // secure:true for port 465, secure:false for port 587
+          service: process.env.SMTP_SERVICE, //service: "qq",
+          host: process.env.SMTP_HOST, // host: "smtp.qq.com",
+          port: process.env.SMTP_PORT, // port: 587,
+          secure: process.env.SMTP_SECURE, // secure: false, // secure:true for port 465, secure:false for port 587
           auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS //  授权码，不是qq密码或者独立密码
