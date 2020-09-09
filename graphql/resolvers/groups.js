@@ -196,7 +196,7 @@ module.exports = {
         return group;
       } else throw new UserInputError("Group not found, or not joined");
     },
-    deleteGroupPost: async (_, {groupId, postId, reason}, context) => {
+    deleteGroupPost: async (_, {groupId, postId}, context) => {
       const {username} = checkAuth(context);
 
       const group = await Group.findById(groupId);
@@ -217,16 +217,6 @@ module.exports = {
             ...group.posts.filter(post => post.top),
             ...group.posts.filter(post => !post.top)
           ];
-          // send a notification
-          const receiverUser = await User.findOne({username: post.username});
-
-          if (receiverUser)
-            receiverUser.notifications.unshift({
-              body: reason,
-              username,
-              createdAt: new Date().toISOString()
-            });
-          await receiverUser.save();
 
           return group;
         } else {

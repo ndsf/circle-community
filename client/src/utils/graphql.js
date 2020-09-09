@@ -70,3 +70,21 @@ export const FETCH_USER_QUERY = gql`
         }
     }
 `;
+
+export const SEND_NOTIFICATION = gql`
+    mutation sendNotification($username: String!, $body: String!) {
+        sendNotification(username: $username, body: $body) {
+            id
+            username
+            email
+            createdAt
+            isTeacher
+            notifications {
+                id
+                body
+                createdAt
+                username
+            }
+        }
+    }
+`;
