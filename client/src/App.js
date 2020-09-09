@@ -3,7 +3,6 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 
 import "moment/locale/zh-cn";
 import "antd/dist/antd.css";
-import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
 import {AuthProvider} from "./context/auth";
