@@ -46,6 +46,7 @@ const GRANT_GROUP_ADMIN_MUTATION = gql`
         body
         createdAt
       }
+      applyCount
     }
   }
 `;

@@ -71,6 +71,13 @@ const groupSchema = new Schema({
       username: String,
       createdAt: String
     }
+  ],
+  admissions: [
+    {
+      body: String,
+      username: String,
+      createdAt: String
+    }
   ]
 });
 

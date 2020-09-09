@@ -1,16 +1,16 @@
 import React from "react";
-import { Upload, message, Icon, Button, Form, Input } from "antd";
+import {Button, Form, Icon, Input, message, Upload} from "antd";
 
-import { useForm } from "../../utils/hooks";
+import {useForm} from "../../utils/hooks";
 import gql from "graphql-tag";
-import { useMutation } from "@apollo/react-hooks";
-import { FETCH_GROUPS_QUERY } from "../../utils/graphql";
-import { slugify } from "transliteration";
+import {useMutation} from "@apollo/react-hooks";
+import {FETCH_GROUPS_QUERY} from "../../utils/graphql";
+import {slugify} from "transliteration";
 
-const { TextArea } = Input;
+const {TextArea} = Input;
 
 const GroupForm = () => {
-  const { values, onChange, onSubmit, setAvatar } = useForm(
+  const {values, onChange, onSubmit, setAvatar} = useForm(
     createGroupCallBack,
     {
       body: "",
@@ -19,7 +19,7 @@ const GroupForm = () => {
     }
   );
 
-  const [createGroup, { error }] = useMutation(CREATE_GROUP_MUTATION, {
+  const [createGroup, {error}] = useMutation(CREATE_GROUP_MUTATION, {
     variables: values,
     update(proxy, result) {
       const data = proxy.readQuery({
@@ -29,7 +29,7 @@ const GroupForm = () => {
       console.log(data.getGroups);
 
       data.getGroups = [result.data.createGroup, ...data.getGroups];
-      proxy.writeQuery({ query: FETCH_GROUPS_QUERY, data });
+      proxy.writeQuery({query: FETCH_GROUPS_QUERY, data});
       values.body = "";
       values.bio = "";
       values.avatar = "";
@@ -51,10 +51,10 @@ const GroupForm = () => {
             ignore: ["."]
           })} file uploaded successfully`
         );
-        setAvatar(`/uploads/${slugify(info.file.name, { ignore: ["."] })}`);
+        setAvatar(`/uploads/${slugify(info.file.name, {ignore: ["."]})}`);
       } else if (info.file.status === "error") {
         //message.error(`${slugify(info.file.name, { ignore: ['.'] })} file upload failed.`);
-        setAvatar(`/uploads/${slugify(info.file.name, { ignore: ["."] })}`);
+        setAvatar(`/uploads/${slugify(info.file.name, {ignore: ["."]})}`);
       }
     }
   };
@@ -81,7 +81,7 @@ const GroupForm = () => {
           onChange={onChange}
           value={values.bio}
           error={error}
-          autosize={{ minRows: 3, maxRows: 5 }}
+          autosize={{minRows: 3, maxRows: 5}}
         />
       </Form.Item>
       <Form.Item label="图片">
@@ -96,7 +96,7 @@ const GroupForm = () => {
       <Form.Item>
         <Upload {...props}>
           <Button>
-            <Icon type="upload" /> 上传图片
+            <Icon type="upload"/> 上传图片
           </Button>
         </Upload>
       </Form.Item>
@@ -110,33 +110,40 @@ const GroupForm = () => {
 };
 
 const CREATE_GROUP_MUTATION = gql`
-  mutation createGroup($body: String!, $bio: String!, $avatar: String!) {
-    createGroup(body: $body, bio: $bio, avatar: $avatar) {
-      id
-      body
-      createdAt
-      username
-      bio
-      avatar
-      posts {
-        id
-        username
-        title
-        body
-        createdAt
-      }
-      likeCount
-      likes {
-        id
-        createdAt
-        username
-      }
-      admins {
-        createdAt
-        username
-      }
+    mutation createGroup($body: String!, $bio: String!, $avatar: String!) {
+        createGroup(body: $body, bio: $bio, avatar: $avatar) {
+            id
+            body
+            createdAt
+            username
+            bio
+            avatar
+            posts {
+                id
+                username
+                title
+                body
+                createdAt
+            }
+            likeCount
+            likes {
+                id
+                createdAt
+                username
+            }
+            admins {
+                createdAt
+                username
+            }
+            admissions {
+                id
+                body
+                createdAt
+                username
+            }
+            admissionCount
+        }
     }
-  }
 `;
 
 export default GroupForm;

@@ -74,6 +74,8 @@ module.exports = gql`
     postCount: Int!
     applies: [Comment]!
     applyCount: Int!
+    admissions: [Comment]!
+    admissionCount: Int!
   }
 
   type Comment {
@@ -202,6 +204,8 @@ module.exports = gql`
     deleteGroupPostComment(groupId: ID!, postId: ID!, commentId: ID!): Post!
     applyGroupAdmin(groupId: ID!, title: String!, body: String!): Group!
     grantGroupAdmin(groupId: ID!, name: String!): Group!
+    applyGroupAdmission(groupId: ID!, body: String!): Group!
+    grantGroupAdmission(groupId: ID!, name: String!): Group!
     createGroupPostSecondaryComment(
       groupId: ID!
       postId: ID!

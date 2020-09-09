@@ -440,6 +440,68 @@ module.exports = {
         throw new UserInputError("Group not found or user is not the creator");
       }
     },
+    applyGroupAdmission: async (_, {groupId, body}, context) => {
+      const {username} = checkAuth(context);
+      const group = await Group.findById(groupId);
+      if (
+        group && // group exists
+        !group.admins.find(admin => admin.username === username) && // not admin
+        username !== group.username && // not creator
+        !group.likes.find(like => like.username === username) // not member
+      ) {
+        if (group.admissions.find(admission => admission.username === username)) {
+          // Group admission already applied, remove the apply
+          group.admissions = group.admissions.filter(
+            admission => admission.username !== username
+          );
+        } else {
+          // Not applied, apply
+          group.admissions.push({
+            body: body,
+            username: username,
+            createdAt: new Date().toISOString()
+          });
+        }
+
+        await group.save();
+        return group;
+      } else
+        throw new UserInputError(
+          "Group not found, or the user is already an admin, or the user is the creator of the group"
+        );
+    },
+    grantGroupAdmission: async (_, {groupId, name}, context) => {
+      const {username} = checkAuth(context);
+      const group = await Group.findById(groupId);
+
+      if (group && (group.username === username || group.admins.find(admin => admin.username === username))) {
+        // creator of the group or admin
+        const admissionIndex = group.admissions.findIndex(a => a.username === name);
+        admission = group.admissions[admissionIndex];
+
+        if (admission && !group.likes.find(like => like.username === name)) {
+          // not already liked
+          group.admissions.splice(admissionIndex, 1);
+          group.likes.push({
+            username: name,
+            createdAt: new Date().toISOString()
+          });
+          await group.save();
+
+          return group;
+        } else if (group.likes.find(like => like.username === name)) {
+          const likeIndex = group.likes.findIndex(a => a.username === name);
+          like = group.likes[likeIndex];
+          group.likes.splice(likeIndex, 1);
+          await group.save();
+          return group;
+        } else {
+          throw new AuthenticationError("Action not allowed");
+        }
+      } else {
+        throw new UserInputError("Group not found or user is not the creator");
+      }
+    },
     reportGroupPost: async (_, {groupId, postId}, context) => {
       const {username} = checkAuth(context);
 
