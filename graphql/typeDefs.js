@@ -88,6 +88,7 @@ module.exports = gql`
     changePassword(password: String!): User!
     resetPassword(username: String!, email: String!): User!
     sendNotification(username: String!, body: String!): String!
+    clearNotification: String!
     createGroup(body: String!, bio: String!, avatar: String!): Group!
     deleteGroup(groupId: ID!): String!
     likeGroup(groupId: ID!): Group!

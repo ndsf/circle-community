@@ -212,6 +212,15 @@ module.exports = {
         await receiverUser.save();
         return '发送成功';
       } else throw new UserInputError("User not found", {errors});
+    },
+    clearNotification: async(_, data, context) => {
+      const {username} = checkAuth(context);
+      const user = await User.findOne({username});
+      if (user) {
+        user.notifications.splice(0, user.notifications.length);
+        await user.save();
+        return "清空成功";
+      } else throw new AuthenticationError("Action not allowed");
     }
   }
 };

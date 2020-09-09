@@ -5,6 +5,7 @@ import {AuthContext} from "../context/auth";
 import {Avatar, Breadcrumb, Card, Col, Layout, List, Row} from "antd";
 import moment from "moment";
 import {FETCH_GROUPS_QUERY, FETCH_USER_QUERY} from "../utils/graphql";
+import UserClearNotificationButton from "../components/user/UserClearNotificationButton";
 
 const {Content, Footer} = Layout;
 const {Meta} = Card;
@@ -42,27 +43,11 @@ const Home = props => {
       key: "notification",
       tab: "通知"
     },
-    // {
-    //   key: "book",
-    //   tab: "书评"
-    // },
-    // {
-    //   key: "movie",
-    //   tab: "影评"
-    // },
     {
       key: "group",
       tab: "小组"
     }
   ] : [
-    // {
-    //   key: "book",
-    //   tab: "书评"
-    // },
-    // {
-    //   key: "movie",
-    //   tab: "影评"
-    // },
     {
       key: "group",
       tab: "小组"
@@ -71,41 +56,44 @@ const Home = props => {
 
   const contentListNoTitle = {
     notification: (
-      <List
-        itemLayout="vertical"
-        pagination={{
-          pageSize: 10,
-        }}
-        size="large"
-        loading={loadingUser}
-        dataSource={loadingUser ? [] : getUser.notifications}
-        renderItem={notification => {
-          // let comments = notification.comments.filter(c => c.username === username);
-          return (
-            <List.Item key={notification.id}>
-              <List.Item.Meta
-                avatar={
-                  <Link to={`/users/${notification.username}`}>
-                    <Avatar
-                      style={{
-                        color: "#f56a00",
-                        backgroundColor: "#fde3cf"
-                      }}
-                    >
-                      {notification.username}
-                    </Avatar>
-                  </Link>
-                }
-                title="通知"
-                description={`${notification.username} 于 ${moment(
-                  notification.createdAt
-                ).fromNow()} 发送`}
-              />
-              {notification.body}
-            </List.Item>
-          );
-        }}
-      />
+      <>
+        <UserClearNotificationButton/>
+        <List
+          itemLayout="vertical"
+          pagination={{
+            pageSize: 10,
+          }}
+          size="large"
+          loading={loadingUser}
+          dataSource={loadingUser ? [] : getUser.notifications}
+          renderItem={notification => {
+            // let comments = notification.comments.filter(c => c.username === username);
+            return (
+              <List.Item key={notification.id}>
+                <List.Item.Meta
+                  avatar={
+                    <Link to={`/users/${notification.username}`}>
+                      <Avatar
+                        style={{
+                          color: "#f56a00",
+                          backgroundColor: "#fde3cf"
+                        }}
+                      >
+                        {notification.username}
+                      </Avatar>
+                    </Link>
+                  }
+                  title="通知"
+                  description={`${notification.username} 于 ${moment(
+                    notification.createdAt
+                  ).fromNow()} 发送`}
+                />
+                {notification.body}
+              </List.Item>
+            );
+          }}
+        />
+      </>
     ),
     group: (
       <List
