@@ -4,7 +4,7 @@ import {useQuery} from "@apollo/react-hooks";
 import {AuthContext} from "../context/auth";
 import {Avatar, Breadcrumb, Card, Col, Layout, List, Row} from "antd";
 import moment from "moment";
-import {FETCH_BOOKS_QUERY, FETCH_GROUPS_QUERY, FETCH_MOVIES_QUERY, FETCH_USER_QUERY} from "../utils/graphql";
+import {FETCH_GROUPS_QUERY, FETCH_USER_QUERY} from "../utils/graphql";
 
 const {Content, Footer} = Layout;
 const {Meta} = Card;
@@ -22,15 +22,15 @@ const Home = props => {
     } else username = user.username;
   }
 
-  const {
-    loading: loadingBooks,
-    data: {getBooks: books}
-  } = useQuery(FETCH_BOOKS_QUERY);
-
-  const {
-    loading: loadingMovies,
-    data: {getMovies: movies}
-  } = useQuery(FETCH_MOVIES_QUERY);
+  // const {
+  //   loading: loadingBooks,
+  //   data: {getBooks: books}
+  // } = useQuery(FETCH_BOOKS_QUERY);
+  //
+  // const {
+  //   loading: loadingMovies,
+  //   data: {getMovies: movies}
+  // } = useQuery(FETCH_MOVIES_QUERY);
 
   const {
     loading: loadingGroups,
@@ -106,93 +106,13 @@ const Home = props => {
                     </Avatar>
                   </Link>
                 }
-                title={<Link to={`/books/${notification.id}`}>来自 {notification.username} 的通知</Link>}
+                title="通知"
                 description={`${notification.username} 于 ${moment(
                   notification.createdAt
                 ).fromNow()} 发送`}
               />
               {notification.body}
             </List.Item>
-          );
-        }}
-      />
-    ),
-    book: (
-      <List
-        itemLayout="vertical"
-        pagination={{
-          pageSize: 10,
-        }}
-        size="large"
-        dataSource={books}
-        renderItem={book => {
-          let comments = book.comments.filter(c => c.username === username);
-          return (
-            <>
-              {comments.map(item => (
-                <List.Item key={item.id}>
-                  <List.Item.Meta
-                    avatar={
-                      <Link to={`/users/${item.username}`}>
-                        <Avatar
-                          style={{
-                            color: "#f56a00",
-                            backgroundColor: "#fde3cf"
-                          }}
-                        >
-                          {item.username}
-                        </Avatar>
-                      </Link>
-                    }
-                    title={<Link to={`/books/${book.id}`}>{item.title}</Link>}
-                    description={`${item.username} 于 ${moment(
-                      item.createdAt
-                    ).fromNow()} 发布在 ${book.body}`}
-                  />
-                  {item.body}
-                </List.Item>
-              ))}
-            </>
-          );
-        }}
-      />
-    ),
-    movie: (
-      <List
-        itemLayout="vertical"
-        pagination={{
-          pageSize: 10,
-        }}
-        size="large"
-        dataSource={movies}
-        renderItem={movie => {
-          let comments = movie.comments.filter(c => c.username === username);
-          return (
-            <>
-              {comments.map(item => (
-                <List.Item key={item.id}>
-                  <List.Item.Meta
-                    avatar={
-                      <Link to={`/users/${item.username}`}>
-                        <Avatar
-                          style={{
-                            color: "#f56a00",
-                            backgroundColor: "#fde3cf"
-                          }}
-                        >
-                          {item.username}
-                        </Avatar>
-                      </Link>
-                    }
-                    title={<Link to={`/movies/${movie.id}`}>{item.title}</Link>}
-                    description={`${item.username} 于 ${moment(
-                      item.createdAt
-                    ).fromNow()} 发布在 ${movie.body}`}
-                  />
-                  {item.body}
-                </List.Item>
-              ))}
-            </>
           );
         }}
       />
@@ -243,7 +163,7 @@ const Home = props => {
     )
   };
 
-  return loadingBooks || loadingMovies || loadingGroups ? (
+  return loadingGroups ? (
     <></>
   ) : (
     <Layout className="layout">
