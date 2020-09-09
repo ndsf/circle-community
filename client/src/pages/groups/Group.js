@@ -144,6 +144,9 @@ const Group = props => {
                 >
                   <List
                     itemLayout="vertical"
+                    pagination={{
+                      pageSize: 20,
+                    }}
                     size="large"
                     dataSource={posts}
                     renderItem={item => {

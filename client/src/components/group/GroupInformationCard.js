@@ -24,7 +24,7 @@ const GroupInformationCard = ({
 
   return (
     <Card
-      cover={<img alt="avatar" src={avatar} />}
+      cover={<img alt="avatar" src={avatar ? avatar : "/logo192.png"} />}
       actions={groupActions}
       bordered={false}
       style={{ marginBottom: "24px" }}
