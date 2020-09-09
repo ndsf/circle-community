@@ -26,8 +26,6 @@ const GroupForm = () => {
         query: FETCH_GROUPS_QUERY
       });
 
-      console.log(data.getGroups);
-
       data.getGroups = [result.data.createGroup, ...data.getGroups];
       proxy.writeQuery({query: FETCH_GROUPS_QUERY, data});
       values.body = "";
