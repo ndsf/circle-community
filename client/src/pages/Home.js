@@ -22,16 +22,6 @@ const Home = props => {
     } else username = user.username;
   }
 
-  // const {
-  //   loading: loadingBooks,
-  //   data: {getBooks: books}
-  // } = useQuery(FETCH_BOOKS_QUERY);
-  //
-  // const {
-  //   loading: loadingMovies,
-  //   data: {getMovies: movies}
-  // } = useQuery(FETCH_MOVIES_QUERY);
-
   const {
     loading: loadingGroups,
     data: {getGroups: groups}

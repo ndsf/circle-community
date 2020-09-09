@@ -24,11 +24,12 @@ const Groups = () => {
 
   const {
     loading: loadingUser,
-    data: { getUser }
+    data: getUserData
   } = useQuery(FETCH_USER_QUERY, {
     variables: {
-      username: user.username
-    }
+      username: user ? user.username : "admin"
+    },
+    skip: !user
   });
 
   return (loading || loadingUser) ? (
@@ -98,11 +99,14 @@ const Groups = () => {
                 column: 4
               }}
               dataSource={groups}
+              pagination={{
+                pageSize: 48,
+              }}
               renderItem={item => (
                 <List.Item>
                   <Card>
                     <Meta
-                      avatar={<Avatar src={item.avatar} />}
+                      avatar={<Avatar src={item.avatar ? item.avatar : "/logo192.png"} />}
                       title={<Link to={`/groups/${item.id}`}>{item.body}</Link>}
                       description={
                         <p>
@@ -125,6 +129,9 @@ const Groups = () => {
                 gutter: 16,
                 column: 4
               }}
+              pagination={{
+                pageSize: 48,
+              }}
               dataSource={[...groups].sort(
                 (first, second) => second.likeCount - first.likeCount
               )}
@@ -132,7 +139,7 @@ const Groups = () => {
                 <List.Item>
                   <Card>
                     <Meta
-                      avatar={<Avatar src={item.avatar} />}
+                      avatar={<Avatar src={item.avatar ? item.avatar : "/logo192.png"} />}
                       title={<Link to={`/groups/${item.id}`}>{item.body}</Link>}
                       description={
                         <p>
@@ -145,7 +152,7 @@ const Groups = () => {
                 </List.Item>
               )}
             />
-            {user && getUser.isTeacher && (
+            {getUserData && getUserData.getUser.isTeacher && (
               <>
                 <div className="line-raw">
                   <Divider>
