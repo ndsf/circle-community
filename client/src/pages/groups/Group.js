@@ -3,19 +3,9 @@ import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import ReactMarkdown from "react-markdown";
-import {
-  Layout,
-  Breadcrumb,
-  Input,
-  Row,
-  Col,
-  Card,
-  Button,
-  Icon,
-  Avatar,
-  List,
-  Skeleton
-} from "antd";
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { StarOutlined, UpCircleOutlined } from '@ant-design/icons';
+import { Layout, Breadcrumb, Input, Row, Col, Card, Button, Avatar, List, Skeleton } from "antd";
 import moment from "moment";
 import { AuthContext } from "../../context/auth";
 import GroupDeletePostButton from "../../components/group/GroupDeletePostButton";
@@ -41,13 +31,13 @@ const Group = props => {
 
   const IconText = ({ type, text }) => (
     <span>
-      <Icon type={type} style={{ marginRight: 8 }} />
+      <LegacyIcon type={type} style={{ marginRight: 8 }} />
       {text}
     </span>
   );
 
   const {
-    data: { getGroup }
+    data: { getGroup } = {}
   } = useQuery(FETCH_GROUP_QUERY, {
     variables: {
       groupId
@@ -77,7 +67,7 @@ const Group = props => {
   if (!getGroup) {
     groupMarkup = <Skeleton />;
   } else {
-    let { id, body, username, posts, postCount, admins } = getGroup;
+    let { id, body, username, posts, postCount, admins, likes } = getGroup;
 
     posts = [
       ...posts.filter(post => post.top),
@@ -131,7 +121,7 @@ const Group = props => {
                     <div style={{ margin: "24px 0" }} />
                     <Button
                       type="submit"
-                      disabled={comment.trim().length < 25}
+                      disabled={comment.trim().length < 25 || !user || !likes.find(like => like.username === user.username)}
                       onClick={submitComment}
                     >
                       发表
@@ -235,17 +225,19 @@ const Group = props => {
                                 {item.qualified && (
                                   <span>
                                     {" "}
-                                    <Icon type="star" style={{
-                                      color: "red"
-                                    }} />{" 精华 "}
+                                    <StarOutlined
+                                      style={{
+                                        color: "red"
+                                      }} />{" 精华 "}
                                   </span>
                                 )}
                                 {item.top && (
                                   <span>
                                     {" "}
-                                    <Icon type="up-circle" style={{
-                                      color: "red"
-                                    }}/>{" 置顶 "}
+                                    <UpCircleOutlined
+                                      style={{
+                                        color: "red"
+                                      }} />{" 置顶 "}
                                   </span>
                                 )}
                               </Link>
