@@ -66,7 +66,7 @@ server.applyMiddleware({app, path: "/"});
 
 const port = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true}).then(() => {
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
   console.log("MongoDB connected");
   return app.listen({port}, () => {
     console.log(`Server running at ${port}`);
